@@ -1,0 +1,51 @@
+extends layout
+
+block content
+  script(type='text/javascript').
+    function prettify() {
+      const ugly = document.getElementById('config').value
+      const obj = JSON.parse(ugly)
+      const pretty = JSON.stringify(obj, undefined, 4)
+      document.getElementById('config').value = pretty
+    }
+    
+  -widget = widget || {}
+
+  if errors
+    .alert(class="alert-danger", role="alert", id="error-group", style="display: block")
+      each error in errors
+        ul= error.name
+        
+  form(action=`/widgets` method="POST")
+    label(for="name") Widget Name:
+    input(
+      type="text"
+      id="name"
+      name="name"
+      class="form-control"
+      value=widget.name
+    )
+    
+    label(for="status") Widget Status:
+    input(
+      type="text"
+      id="status"
+      name="status"
+      class="form-control"
+      value=widget.status
+    )
+    
+    label(for="count") Widget Count:
+    input(
+      type="number"
+      id="count"
+      name="count"
+      class="form-control"
+      value=widget.count
+    )
+
+    input(
+      type="submit"
+      value="Create widget"
+      class="btn btn-lg btn-primary btn-block"
+    )

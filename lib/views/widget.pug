@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  if widget
+    table.listing-table.table-dark.table-striped
+      tr
+        th Name
+        th Status
+        th Count
+      tr
+        td= widget.name
+        td= widget.status
+        td= widget.count
+
+  else
+    p widget does not exist!

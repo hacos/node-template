@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  if widgets.length
+    table.listing-table.table-dark.table-striped
+      tr
+        th Name
+        th Status
+        th Count
+        th Action
+      each widget in widgets
+        tr
+          td
+            a(href= `/widgets/${widget.name}`)= widget.name
+          td= widget.status
+          td= widget.count
+          td
+            form(action=`/widgets/${widget.name}` method='delete')
+              button.btn-link(type='submit' name='name' value=widget.name) Delete
+  else
+    p No widgets yet :(
+
+  form(action=`/widgets/new` method='get')
+    button.btn-lg.btn-primary.btn-block(type='submit') New Widget
