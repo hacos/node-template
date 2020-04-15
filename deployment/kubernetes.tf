@@ -40,11 +40,11 @@ resource "kubernetes_deployment" "main" {
 
       spec {
         node_selector = {
-          agentpool = "primary"
+          name = "primary"
         }
 
         container {
-          image             = "udelvacr${local.environment}.azurecr.io/${var.prefix}:latest"
+          image             = "${aws_ecr_repository.main.repository_url}:latest"
           name              = var.prefix
           image_pull_policy = "Always"
 
@@ -72,7 +72,7 @@ resource "kubernetes_deployment" "main" {
 
           liveness_probe {
             http_get {
-              path = "/health"
+              path = "/health-check"
               port = random_integer.port.result
             }
 

@@ -1,0 +1,28 @@
+version: 2.1
+orbs:
+  node: circleci/node@1.1.6
+jobs:
+  build-and-test:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - run:
+          name: Build .env file
+          command: |
+            NODE_ENV
+            find . -type f -name '*.sh' | xargs shellcheck --external-sources
+      - node/with-cache:
+          steps:
+            - run: npm install
+            - run: npm test
+workflows:
+    build-and-test:
+      jobs:
+        - build-and-test
+        - docker-build-tag-and-push:
+            requires:
+              - build-and-test # only run build-job once shellcheck has run
+            filters:
+              branches:
+                only: master # only run build-job on master branch
