@@ -15,3 +15,5 @@ data "aws_route53_zone" "main" {
   name         = local.root_domain
   private_zone = false
 }
+
+data "aws_elb_hosted_zone_id" "main" {}

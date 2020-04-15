@@ -39,7 +39,7 @@ while getopts 'he:n:' flag; do
 done
 
 if [ $env ]; then
-  echo "[INFO] Pushing to eks-${env}"
+  echo "[INFO] Pushing to ${name}-${env}"
 else
   echo "[ERROR] Environment not provided"
   print_usage
@@ -47,7 +47,7 @@ else
 fi
 
 if [ $name ]; then
-  echo "[INFO] Pushing to eks-${env}/${name}"
+  echo "[INFO] Pushing to ${name}-${env}"
 else
   echo "[ERROR] Name not provided"
   print_usage
