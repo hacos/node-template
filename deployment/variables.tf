@@ -1,5 +1,9 @@
 variable "prefix" {
-  default = "chaosmonkey"
+  default = "node-template"
+}
+
+variable "region" {
+  default = "us-west-2"
 }
 
 variable "min_replicas" {
@@ -22,7 +26,7 @@ variable "workspace_to_environment_map" {
 variable "workspace_to_root_domain_map" {
   type = map(string)
   default = {
-    staging    = "stage-udelv.com"
-    production = "udelv.com"
+    staging    = "hacphan.com"
+    production = "hacphan.com"
   }
 }

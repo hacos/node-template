@@ -9,6 +9,6 @@ COPY lib lib/
 COPY node_modules node_modules/
 COPY public public/
 COPY test test/
-COPY package.json *.js .npmrc .env ./
+COPY package.json *.js .env ./
 
 CMD [ "pm2-runtime", "start", "ecosystem.config.js" ]
