@@ -37,8 +37,8 @@ podTemplate(containers: [
     }
 
     stage('Build Docker Image'){
-      container(‘docker’) {
-        git 'https://github.com/hacos/node-template.git'
+      container(docker) {
+        git credentialsId: 'github', url: 'https://github.com/hacos/node-template.git'
         stage('docker version') {
           when {
             branch 'master'
