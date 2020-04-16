@@ -5,7 +5,6 @@ podTemplate(containers: [
     node(POD_LABEL) {
         stage('Run in pm2 container') {
             container('pm2') {
-                git 'https://github.com/hacos/node-template.git'
                 stage('ls') {
                     sh 'ls -lha ${WORKSPACE}'
                 }
