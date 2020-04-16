@@ -1,10 +1,14 @@
-podTemplate {
+podTemplate(containers: [
+    containerTemplate(name: 'pm2', image: 'keymetrics/pm2:10-jessie', ttyEnabled: true, command: 'cat')
+  ]) {
+
     node(POD_LABEL) {
-        stage('Run shell') {
-            sh 'echo hello world'
-        }
-        stage('Check npm') {
-            sh 'npm --version'
+        stage('Check npm version') {
+            container('pm2') {
+                stage('Build a Maven project') {
+                    sh 'npm --version'
+                }
+            }
         }
     }
 }
