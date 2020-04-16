@@ -3,10 +3,14 @@ podTemplate(containers: [
   ]) {
 
     node(POD_LABEL) {
-        stage('Check npm version') {
+        stage('Run in pm2 container') {
             container('pm2') {
-                stage('Build a Maven project') {
-                    sh 'npm --version'
+                stage('npm install') {
+                    sh 'npm install'
+                }
+
+                stage('npm test') {
+                    sh 'npm run test --if-present'
                 }
             }
         }
