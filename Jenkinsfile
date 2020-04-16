@@ -46,15 +46,9 @@ podTemplate(
 
     stage('Build Docker Image') {
       container('docker') {
-        git credentialsId: 'github', url: 'https://github.com/hacos/node-template.git'
-        stage('docker version') {
-          def BUILD_TAG = sh(script: "echo `date +%Y-%m-%d-%H-%M`", returnStdout: true).trim()
-          sh 'echo ${BUILD_TAG}'
-          sh 'cat .env'
-        }
-
         stage('docker build') {
-          docker.build("node-template:${env.BUILD_ID}")
+          def BUILD_TAG = sh(script: "echo `date +%Y-%m-%d-%H-%M`", returnStdout: true).trim()
+          docker.build("node-template:${BUILD_TAG}")
         }
       }
     }
