@@ -1,5 +1,5 @@
 podTemplate(containers: [
-    containerTemplate(name: 'pm2', image: 'keymetrics/pm2:10-jessie', ttyEnabled: true, command: 'cat')
+    containerTemplate(name: 'pm2', image: 'keymetrics/pm2:10-jessie', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'docker', image:'trion/jenkins-docker-client')
   ]) {
 
