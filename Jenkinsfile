@@ -1,11 +1,7 @@
-podTemplate(containers: [
-    containerTemplate(name: 'pm2', image: 'keymetrics/pm2:10-jessie', ttyEnabled: true, command: 'cat'),
-  ]) {
+podTemplate {
     node(POD_LABEL) {
-      stage('Run shell') {
-        container('mycontainer') {
-          sh 'echo hello world'
+        stage('Run shell') {
+            sh 'echo hello world'
         }
-      }
     }
 }
