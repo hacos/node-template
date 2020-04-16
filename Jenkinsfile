@@ -11,7 +11,7 @@ podTemplate(containers: [
   ),
   containerTemplate(
     name: 'docker',
-    image:'trion/jenkins-docker-client',
+    image:'trion/jenkins-docker-client:latest',
     ttyEnabled: true,
     command: 'cat'
   )
@@ -40,10 +40,6 @@ podTemplate(containers: [
       container(docker) {
         git credentialsId: 'github', url: 'https://github.com/hacos/node-template.git'
         stage('docker version') {
-          when {
-            branch 'master'
-          }
-
           steps {
             sh 'docker --version'
           }
