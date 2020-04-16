@@ -5,6 +5,10 @@ podTemplate(containers: [
     node(POD_LABEL) {
         stage('Run in pm2 container') {
             container('pm2') {
+                stage('ls') {
+                    sh 'ls -lha'
+                }
+
                 stage('npm install') {
                     sh 'npm install'
                 }
