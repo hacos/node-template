@@ -40,9 +40,11 @@ podTemplate(containers: [
       container('docker') {
         git credentialsId: 'github', url: 'https://github.com/hacos/node-template.git'
         stage('docker version') {
-          steps {
-            sh 'docker --version'
-          }
+          sh 'docker --version'
+        }
+
+        stage('docker build') {
+          docker.build("node-template:${env.BUILD_ID}")
         }
       }
     }
