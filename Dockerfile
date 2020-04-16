@@ -1,8 +1,6 @@
 FROM keymetrics/pm2:10-jessie
-WORKDIR /code
 
-# Install things I like
-RUN apt-get update && apt-get install -y vim wget unzip jq
+WORKDIR /code
 
 # Bundle APP files
 COPY lib lib/

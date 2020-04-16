@@ -29,8 +29,8 @@ podTemplate(
       container('pm2') {
         git credentialsId: 'github', url: 'https://github.com/hacos/node-template.git'
         stage('Prep .env file') {
-          sh 'echo "NODE_ENV=$(env.NODE_ENV)" > .env'
-          sh 'echo "ACCESS_TOKEN=$(env.ACCESS_TOKEN)" >> .env'
+          sh 'echo "NODE_ENV=${env.NODE_ENV}" > .env'
+          sh 'echo "ACCESS_TOKEN=${env.ACCESS_TOKEN}" >> .env'
           sh 'cat .env'
         }
 
