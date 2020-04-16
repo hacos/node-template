@@ -1,5 +1,5 @@
 pipeline {
-    agent { docker { image 'keymetrics/pm2:10-jessie' } }
+    agent { docker { image 'node:10' } }
     stages {
         stage('build') {
             steps {
