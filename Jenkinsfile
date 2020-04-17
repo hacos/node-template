@@ -45,6 +45,7 @@ podTemplate(
       container('docker') {
         stage('docker build') {
           def BUILD_TAG = sh(script: "echo `date +%Y-%m-%d-%H-%M`", returnStdout: true).trim()
+          sh 'cat .env'
           def NAME = "node-template-staging:${BUILD_TAG}"
           docker.build("${NAME}")
           docker.withRegistry("https://978651561347.dkr.ecr.us-west-2.amazonaws.com", "ecr:us-west-2:hac") {
