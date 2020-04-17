@@ -60,6 +60,19 @@ podTemplate(
           sh './aws/install'
           sh 'aws --version'
 
+          withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'hac', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+            sh 'mkdir -p ~/.aws/'
+            sh 'echo "[default]" > ~/.aws/credentials'
+            sh 'echo "aws_access_key_id = ${AWS_ACCESS_KEY_ID}" >> ~/.aws/credentials'
+            sh 'echo "aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials'
+            sh 'cat ~/.aws/credentials'
+          }
+
+          sh 'curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.15.10/2020-02-22/bin/linux/amd64/aws-iam-authenticator'
+          sh 'chmod +x ./aws-iam-authenticator'
+          sh 'mv ./aws-iam-authenticator /usr/local/bin/aws-iam-authenticator'
+          sh 'aws-iam-authenticator help'
+
           sh 'curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.15.10/2020-02-22/bin/linux/amd64/kubectl'
           sh 'chmod +x ./kubectl'
           sh 'mv ./kubectl /usr/local/bin/kubectl'
@@ -67,6 +80,7 @@ podTemplate(
 
           sh 'aws eks --region us-west-2 update-kubeconfig --name eks-staging'
           sh 'kubectl config get-contexts'
+          sh 'kubectl get deployments -A'
         }
 
         stage('docker build') {
