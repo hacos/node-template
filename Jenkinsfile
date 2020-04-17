@@ -31,7 +31,6 @@ podTemplate(
         stage('Prep .env file') {
           sh 'echo "NODE_ENV=${NODE_ENV}" > .env'
           sh 'echo "ACCESS_TOKEN=${ACCESS_TOKEN}" >> .env'
-          sh 'cat .env'
         }
 
         stage('npm install') {
@@ -48,9 +47,10 @@ podTemplate(
       container('docker') {
         stage('docker build') {
           def BUILD_TAG = sh(script: "echo `date +%Y-%m-%d-%H-%M`", returnStdout: true).trim()
-          docker.build("node-template:${BUILD_TAG}")
+          def NAME = "node-template-${NODE_ENV}:${BUILD_TAG}"
+          docker.build("${NAME}")
           docker.withRegistry("https://978651561347.dkr.ecr.us-west-2.amazonaws.com", "ecr:us-west-2:hac") {
-            docker.image("node-template:${BUILD_TAG}").push()
+            docker.image("${NAME}").push()
           }
         }
       }
