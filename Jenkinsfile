@@ -13,9 +13,6 @@ podTemplate(
     containerTemplate(
       name: 'ubuntu',
       image:'ubuntu:18.04',
-      envVars: [
-        envVar(key: 'REPO', value: 'node-template')
-      ],
       ttyEnabled: true,
       command: 'cat'
     )
@@ -85,6 +82,7 @@ podTemplate(
 
         stage('docker build') {
           def TAG = sh(script: "echo `date +%Y-%m-%d-%H-%M`", returnStdout: true).trim()
+          def REPO = "node-template"
           def NAME_TAG = "${REPO}:${TAG}"
           docker.build("${NAME_TAG}")
           docker.withRegistry("https://978651561347.dkr.ecr.us-west-2.amazonaws.com", "ecr:us-west-2:hac") {
