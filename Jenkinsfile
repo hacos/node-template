@@ -14,8 +14,7 @@ podTemplate(
       name: 'ubuntu',
       image:'ubuntu:18.04',
       envVars: [
-        envVar(key: 'NAME', value: 'node-template'),
-        envVar(key: 'TAG', value: sh(script: "echo `date +%Y-%m-%d-%H-%M`").trim()),
+        envVar(key: 'NAME', value: 'node-template')
       ],
       ttyEnabled: true,
       command: 'cat'
@@ -85,6 +84,7 @@ podTemplate(
         }
 
         stage('docker build') {
+          def TAG = sh(script: "echo `date +%Y-%m-%d-%H-%M`").trim()
           docker.build("${NAME}:${TAG}")
           docker.withRegistry("https://978651561347.dkr.ecr.us-west-2.amazonaws.com", "ecr:us-west-2:hac") {
             docker.image("${NAME}:${TAG}").push()
