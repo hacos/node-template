@@ -15,6 +15,12 @@ podTemplate(
       image:'trion/jenkins-docker-client:latest',
       ttyEnabled: true,
       command: 'cat'
+    ),
+    containerTemplate(
+      name: 'kubectl',
+      image:'bitnami/kubectl:latest',
+      ttyEnabled: true,
+      command: 'cat'
     )
   ],
   volumes: [
@@ -25,7 +31,7 @@ podTemplate(
   ]
 ) {
   node(POD_LABEL) {
-    stage('Run in pm2 container') {
+    stage('Install, Build, and Test') {
       container('pm2') {
         git credentialsId: 'github', url: 'https://github.com/hacos/node-template.git'
         stage('Prep .env file') {
@@ -45,14 +51,17 @@ podTemplate(
       container('docker') {
         stage('docker build') {
           def BUILD_TAG = sh(script: "echo `date +%Y-%m-%d-%H-%M`", returnStdout: true).trim()
-          sh 'cat .env'
           def NAME = "node-template:${BUILD_TAG}"
           docker.build("${NAME}")
           docker.withRegistry("https://978651561347.dkr.ecr.us-west-2.amazonaws.com", "ecr:us-west-2:hac") {
             docker.image("${NAME}").push()
           }
         }
+      }
+    }
 
+    stage('kubectl rollout') {
+      container('kubectl') {
         stage('kubectl') {
           withKubeConfig([credentialsId: '2c82afb6-5164-43fa-9074-733eb40cf60c', serverUrl: 'https://kubernetes.default']) {
             sh 'kubectl set image -n node-template deployment/${NAME}-deployment ${NAME}=978651561347.dkr.ecr.us-west-2.amazonaws.com/${NAME}:latest'
