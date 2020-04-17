@@ -85,9 +85,10 @@ podTemplate(
 
         stage('docker build') {
           def TAG = sh(script: "echo `date +%Y-%m-%d-%H-%M`", returnStdout: true).trim()
-          docker.build("${NAME}:${TAG}")
+          def NAME_TAG = "${NAME}:${TAG}"
+          docker.build("${NAME_TAG}")
           docker.withRegistry("https://978651561347.dkr.ecr.us-west-2.amazonaws.com", "ecr:us-west-2:hac") {
-            docker.image("${NAME}:${TAG}").push()
+            docker.image("${NAME_TAG}").push()
           }
         }
 
