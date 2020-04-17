@@ -91,8 +91,8 @@ podTemplate(
 
         stage('kubectl rollout restart') {
           def TAG = sh(script: "echo `date +%Y-%m-%d-%H-%M`", returnStdout: true).trim()
-          sh 'kubectl set image -n node-template deployment/node-template-deployment node-template=978651561347.dkr.ecr.us-west-2.amazonaws.com/node-template:${TAG}'
-          sh 'kubectl rollout restart -n node-template deployment/node-template-deployment'
+          sh "kubectl set image -n node-template deployment/node-template-deployment node-template=978651561347.dkr.ecr.us-west-2.amazonaws.com/node-template:${TAG}"
+          sh "kubectl rollout restart -n node-template deployment/node-template-deployment"
         }
       }
     }
