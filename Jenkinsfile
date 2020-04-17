@@ -74,6 +74,11 @@ podTemplate(
             docker.image("${NAME}").push()
           }
         }
+
+        stage('kubectl rollout restart') {
+          sh 'kubectl set image -n node-template deployment/${NAME}-deployment ${NAME}=978651561347.dkr.ecr.us-west-2.amazonaws.com/${NAME}:${BUILD_TAG}'
+          sh 'kubectl rollout restart -n node-template deployment/$(NAME)-deployment'
+        }
       }
     }
   }
