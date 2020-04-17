@@ -80,18 +80,16 @@ podTemplate(
           sh 'kubectl get deployments -A'
         }
 
-        stage('docker build') {
+        stage('docker build, push, and deploy') {
+          def NAME = "node-template"
           def TAG = sh(script: "echo `date +%Y-%m-%d-%H-%M`", returnStdout: true).trim()
-          def NAME_TAG = "node-template:${TAG}"
+          def NAME_TAG = "${NAME}:${TAG}"
           docker.build("${NAME_TAG}")
           docker.withRegistry("https://978651561347.dkr.ecr.us-west-2.amazonaws.com", "ecr:us-west-2:hac") {
             docker.image("${NAME_TAG}").push()
           }
-        }
-
-        stage('kubectl rollout restart') {
-          sh "kubectl set image -n node-template deployment/node-template-deployment node-template=978651561347.dkr.ecr.us-west-2.amazonaws.com/node-template:${TAG}"
-          sh "kubectl rollout restart -n node-template deployment/node-template-deployment"
+          sh "kubectl set image -n ${NAME} deployment/${NAME}-deployment ${NAME}=978651561347.dkr.ecr.us-west-2.amazonaws.com/${NAME}:${TAG}"
+          sh "kubectl rollout restart -n ${NAME} deployment/${NAME}-deployment"
         }
       }
     }
