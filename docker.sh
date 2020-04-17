@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Variables
-name='node-template' # Can also be subfolders like example/aks-docker-example
-date_tag=`date +%Y-%m-%d-%H-%M` # YYYY-MM-DD-HH-MM
-
 print_usage() {
   echo "Build, tag, and push Docker image to ECR"
   echo "Usage: $0 [-e environment] -n name"
@@ -16,6 +12,8 @@ print_usage() {
 
 # Defaults
 env="staging"
+name='node-template' # Can also be subfolders like example/aks-docker-example
+date_tag=`date +%Y-%m-%d-%H-%M` # YYYY-MM-DD-HH-MM
 
 echo '[DEBUG] Parsing flags'
 while getopts 'he:n:' flag; do
@@ -39,7 +37,7 @@ while getopts 'he:n:' flag; do
 done
 
 if [ $env ]; then
-  echo "[INFO] Pushing to ${name}-${env}"
+  echo "[INFO] Pushing to ${name}"
 else
   echo "[ERROR] Environment not provided"
   print_usage
@@ -47,7 +45,7 @@ else
 fi
 
 if [ $name ]; then
-  echo "[INFO] Pushing to ${name}-${env}"
+  echo "[INFO] Pushing to ${name}"
 else
   echo "[ERROR] Name not provided"
   print_usage
@@ -55,15 +53,15 @@ else
 fi
 
 echo "[INFO] Login"
-aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 978651561347.dkr.ecr.us-west-2.amazonaws.com/${name}-${env}
+aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 978651561347.dkr.ecr.us-west-2.amazonaws.com/${name}
 
 # Build and Tag
 echo "[INFO] Build and Tag"
-docker build -t ${name}-${env}:latest -t ${name}-${env}:${date_tag} .
-docker tag ${name}-${env}:latest 978651561347.dkr.ecr.us-west-2.amazonaws.com/${name}-${env}:latest
-docker tag ${name}-${env}:${date_tag} 978651561347.dkr.ecr.us-west-2.amazonaws.com/${name}-${env}:${date_tag}
+docker build -t ${name}:latest -t ${name}:${date_tag} .
+docker tag ${name}:latest 978651561347.dkr.ecr.us-west-2.amazonaws.com/${name}:latest
+docker tag ${name}:${date_tag} 978651561347.dkr.ecr.us-west-2.amazonaws.com/${name}:${date_tag}
 
 # Push
 echo "[INFO] Pushing"
-docker push 978651561347.dkr.ecr.us-west-2.amazonaws.com/${name}-${env}:latest
-docker push 978651561347.dkr.ecr.us-west-2.amazonaws.com/${name}-${env}:${date_tag}
+docker push 978651561347.dkr.ecr.us-west-2.amazonaws.com/${name}:latest
+docker push 978651561347.dkr.ecr.us-west-2.amazonaws.com/${name}:${date_tag}
