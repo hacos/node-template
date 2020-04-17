@@ -15,12 +15,6 @@ podTemplate(
       image:'trion/jenkins-docker-client:latest',
       ttyEnabled: true,
       command: 'cat'
-    ),
-    containerTemplate(
-      name: 'kubectl',
-      image:'bitnami/kubectl:latest',
-      ttyEnabled: true,
-      command: 'cat'
     )
   ],
   volumes: [
@@ -57,19 +51,12 @@ podTemplate(
             docker.image("${NAME}").push()
           }
         }
-      }
-    }
 
-    stage('kubectl rollout') {
-      container('kubectl') {
         stage('kubectl') {
-          withKubeConfig([
-            credentialsId: 'jenkins-deployer',
-            namespace: 'node-template'
-          ]) {
-            sh 'kubectl set image -n node-template deployment/${NAME}-deployment ${NAME}=978651561347.dkr.ecr.us-west-2.amazonaws.com/${NAME}:${BUILD_TAG}'
-            sh 'kubectl rollout restart -n node-template deployment/$(NAME)-deployment'
-          }
+          sh 'curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl'
+          sh 'chmod +x ./kubectl'
+          sh 'sudo mv ./kubectl /usr/local/bin/kubectl'
+          sh 'kubectl version --client'
         }
       }
     }
