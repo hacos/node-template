@@ -15,6 +15,7 @@ podTemplate(
       image:'ubuntu:18.04',
       envVars: [
         envVar(key: 'NAME', value: 'node-template'),
+        envVar(key: 'TAG', value: sh(script: "echo `date +%Y-%m-%d-%H-%M`").trim()),
       ],
       ttyEnabled: true,
       command: 'cat'
@@ -84,18 +85,15 @@ podTemplate(
         }
 
         stage('docker build') {
-          def BUILD_TAG = sh(script: "echo `date +%Y-%m-%d-%H-%M`", returnStdout: true).trim()
-          def NAME_TAG = "node-template:${BUILD_TAG}"
-          docker.build("${NAME_TAG}")
+          docker.build("${NAME}:${TAG}")
           docker.withRegistry("https://978651561347.dkr.ecr.us-west-2.amazonaws.com", "ecr:us-west-2:hac") {
-            docker.image("${NAME_TAG}").push()
+            docker.image("${NAME}:${TAG}").push()
           }
         }
 
         stage('kubectl rollout restart') {
-          def BUILD_TAG = sh(script: "echo `date +%Y-%m-%d-%H-%M`", returnStdout: true).trim()
-          sh 'kubectl set image -n ${NAME} deployment/${NAME}-deployment ${NAME}=978651561347.dkr.ecr.us-west-2.amazonaws.com/${NAME}:${BUILD_TAG}'
-          sh 'kubectl rollout restart -n ${NAME} deployment/$(NAME)-deployment'
+          sh 'kubectl set image -n ${NAME} deployment/${NAME}-deployment ${NAME}=978651561347.dkr.ecr.us-west-2.amazonaws.com/${NAME}:${TAG}'
+          sh 'kubectl rollout restart -n ${NAME} deployment/${NAME}-deployment'
         }
       }
     }
