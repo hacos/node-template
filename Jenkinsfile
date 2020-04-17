@@ -14,7 +14,7 @@ podTemplate(
       name: 'ubuntu',
       image:'ubuntu:18.04',
       envVars: [
-        envVar(key: 'NAME', value: 'node-template')
+        envVar(key: 'REPO', value: 'node-template')
       ],
       ttyEnabled: true,
       command: 'cat'
@@ -85,7 +85,7 @@ podTemplate(
 
         stage('docker build') {
           def TAG = sh(script: "echo `date +%Y-%m-%d-%H-%M`", returnStdout: true).trim()
-          def NAME_TAG = "${NAME}:${TAG}"
+          def NAME_TAG = "${REPO}:${TAG}"
           docker.build("${NAME_TAG}")
           docker.withRegistry("https://978651561347.dkr.ecr.us-west-2.amazonaws.com", "ecr:us-west-2:hac") {
             docker.image("${NAME_TAG}").push()
@@ -93,8 +93,8 @@ podTemplate(
         }
 
         stage('kubectl rollout restart') {
-          sh 'kubectl set image -n ${NAME} deployment/${NAME}-deployment ${NAME}=978651561347.dkr.ecr.us-west-2.amazonaws.com/${NAME}:${TAG}'
-          sh 'kubectl rollout restart -n ${NAME} deployment/${NAME}-deployment'
+          sh 'kubectl set image -n ${REPO} deployment/${REPO}-deployment ${REPO}=978651561347.dkr.ecr.us-west-2.amazonaws.com/${REPO}:${TAG}'
+          sh 'kubectl rollout restart -n ${REPO} deployment/${REPO}-deployment'
         }
       }
     }
