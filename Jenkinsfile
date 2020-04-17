@@ -13,9 +13,6 @@ podTemplate(
     containerTemplate(
       name: 'docker',
       image:'trion/jenkins-docker-client:latest',
-      envVars: [
-        envVar(key: 'NODE_ENV', value: 'staging')
-      ],
       ttyEnabled: true,
       command: 'cat'
     )
@@ -48,7 +45,7 @@ podTemplate(
       container('docker') {
         stage('docker build') {
           def BUILD_TAG = sh(script: "echo `date +%Y-%m-%d-%H-%M`", returnStdout: true).trim()
-          def NAME = "node-template-${NODE_ENV}:${BUILD_TAG}"
+          def NAME = "node-template-staging:${BUILD_TAG}"
           docker.build("${NAME}")
           docker.withRegistry("https://978651561347.dkr.ecr.us-west-2.amazonaws.com", "ecr:us-west-2:hac") {
             docker.image("${NAME}").push()
