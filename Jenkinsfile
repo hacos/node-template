@@ -63,8 +63,11 @@ podTemplate(
     stage('kubectl rollout') {
       container('kubectl') {
         stage('kubectl') {
-          withKubeConfig([credentialsId: '2c82afb6-5164-43fa-9074-733eb40cf60c', serverUrl: 'https://kubernetes.default']) {
-            sh 'kubectl set image -n node-template deployment/${NAME}-deployment ${NAME}=978651561347.dkr.ecr.us-west-2.amazonaws.com/${NAME}:latest'
+          withKubeConfig([
+            credentialsId: '2c82afb6-5164-43fa-9074-733eb40cf60c',
+            namespace: 'node-template'
+          ]) {
+            sh 'kubectl set image -n node-template deployment/${NAME}-deployment ${NAME}=978651561347.dkr.ecr.us-west-2.amazonaws.com/${NAME}:${BUILD_TAG}'
             sh 'kubectl rollout restart -n node-template deployment/$(NAME)-deployment'
           }
         }
