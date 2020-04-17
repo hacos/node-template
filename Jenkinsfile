@@ -13,6 +13,9 @@ podTemplate(
     containerTemplate(
       name: 'docker',
       image:'trion/jenkins-docker-client:latest',
+      envVars: [
+        envVar(key: 'NODE_ENV', value: 'staging')
+      ],
       ttyEnabled: true,
       command: 'cat'
     )
@@ -33,11 +36,9 @@ podTemplate(
           sh 'echo "ACCESS_TOKEN=${ACCESS_TOKEN}" >> .env'
         }
 
-        stage('npm install') {
+        stage('npm install, build, and test') {
           sh 'npm install'
-        }
-
-        stage('npm test') {
+          sh 'npm run build --if-present'
           sh 'npm run test --if-present'
         }
       }
