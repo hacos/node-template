@@ -82,8 +82,7 @@ podTemplate(
 
         stage('docker build') {
           def TAG = sh(script: "echo `date +%Y-%m-%d-%H-%M`", returnStdout: true).trim()
-          def REPO = "node-template"
-          def NAME_TAG = "${REPO}:${TAG}"
+          def NAME_TAG = "node-template:${TAG}"
           docker.build("${NAME_TAG}")
           docker.withRegistry("https://978651561347.dkr.ecr.us-west-2.amazonaws.com", "ecr:us-west-2:hac") {
             docker.image("${NAME_TAG}").push()
@@ -91,8 +90,8 @@ podTemplate(
         }
 
         stage('kubectl rollout restart') {
-          sh 'kubectl set image -n ${REPO} deployment/${REPO}-deployment ${REPO}=978651561347.dkr.ecr.us-west-2.amazonaws.com/${REPO}:${TAG}'
-          sh 'kubectl rollout restart -n ${REPO} deployment/${REPO}-deployment'
+          sh 'kubectl set image -n node-template deployment/node-template-deployment node-template=978651561347.dkr.ecr.us-west-2.amazonaws.com/node-template:${TAG}'
+          sh 'kubectl rollout restart -n node-template deployment/node-template-deployment'
         }
       }
     }
