@@ -57,10 +57,10 @@ podTemplate(
           sh './aws/install'
           sh 'aws --version'
 
-          sh 'curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.15.10/2020-02-22/bin/darwin/amd64/kubectl'
+          sh 'curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.15.10/2020-02-22/bin/linux/amd64/kubectl'
           sh 'chmod +x ./kubectl'
           sh 'mv ./kubectl /usr/local/bin/kubectl'
-          sh 'kubectl version --client'
+          sh 'kubectl version --short --client'
 
           sh 'aws eks --region us-west-2 update-kubeconfig --name eks-staging'
           sh 'kubectl config get-contexts'
