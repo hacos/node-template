@@ -15,6 +15,11 @@ resource "kubernetes_service" "main" {
       target_port = random_integer.port.result
     }
   }
+
+  depends_on = [
+    kubernetes_namespace.main,
+    kubernetes_deployment.main,
+  ]
 }
 
 resource "kubernetes_ingress" "main" {
@@ -44,6 +49,11 @@ resource "kubernetes_ingress" "main" {
       }
     }
   }
+
+  depends_on = [
+    kubernetes_namespace.main,
+    kubernetes_service.main,
+  ]
 }
 
 resource "aws_route53_record" "main" {
@@ -56,4 +66,8 @@ resource "aws_route53_record" "main" {
     zone_id                = data.aws_elb_hosted_zone_id.main.id
     evaluate_target_health = false
   }
+
+  depends_on = [
+    kubernetes_ingress.main,
+  ]
 }

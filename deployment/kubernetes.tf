@@ -84,6 +84,10 @@ resource "kubernetes_deployment" "main" {
     }
   }
 
+  depends_on = [
+    kubernetes_namespace.main,
+  ]
+
   lifecycle {
     ignore_changes = [
       # This gets changed with the autoscaler all the time
