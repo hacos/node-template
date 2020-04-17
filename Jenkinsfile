@@ -64,7 +64,7 @@ podTemplate(
       container('kubectl') {
         stage('kubectl') {
           withKubeConfig([
-            credentialsId: '2c82afb6-5164-43fa-9074-733eb40cf60c',
+            credentialsId: 'jenkins-deployer',
             namespace: 'node-template'
           ]) {
             sh 'kubectl set image -n node-template deployment/${NAME}-deployment ${NAME}=978651561347.dkr.ecr.us-west-2.amazonaws.com/${NAME}:${BUILD_TAG}'
